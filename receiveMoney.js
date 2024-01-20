@@ -15,6 +15,11 @@ function receiveMoney(userName, amount) {
 module.exports = receiveMoney;
 
 // Test cases for receiveMoney
+const separator = "-".repeat(60);
+console.log(separator);
+
+console.log("Test cases to test the receive money function:")
+
 // Test case 1: Add money for an existing user
 receiveMoney("Shrey", 50);
 

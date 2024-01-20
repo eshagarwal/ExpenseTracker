@@ -14,6 +14,12 @@ function spendMoney(userName, amount, purpose) {
 
 module.exports = spendMoney;
 
+// Test cases for spendMoney
+const separator = "-".repeat(60);
+console.log(separator);
+
+console.log("Test cases to test the spend money function:")
+
 // Test case 1: Spend money for an existing user
 spendMoney("Shrey", 50, "Groceries");
 

@@ -11,6 +11,11 @@ module.exports = getAllTransactions;
 
 // Test cases
 
+const separator = "-".repeat(60);
+console.log(separator);
+
+console.log("Test cases to test the get transactions function:")
+
 // Test Case 1
 const transactionsShrey = getAllTransactions("Shrey");
 if (transactionsShrey.length > 0) {

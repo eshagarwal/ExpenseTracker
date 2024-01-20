@@ -21,6 +21,12 @@ function getCurrentBalance(userName) {
 
 module.exports = getCurrentBalance;
 
+// Test cases 
+const separator = "-".repeat(60);
+console.log(separator);
+
+console.log("Test cases to test the current balance function:")
+
 // Test case 1: Get balance for a user with multiple transactions
 users[1].transactions = [
   { type: "Receive", amount: 30 },
@@ -47,4 +53,4 @@ if (nonExistingUserBalance === null) {
   console.error("Test case 2 failed");
 }
 
-console.log(getCurrentBalance("Ayush"));
+console.log("Current Balance: " + getCurrentBalance("Ayush"));
