@@ -16,7 +16,7 @@ function assert(condition, message) {
 const separator = "-".repeat(60);
 console.log(separator);
 
-console.log("Test cases to test the Expense Tracker")
+console.log("Test cases to test the Expense Tracker");
 
 function runTests() {
   // Test Case 1
@@ -141,7 +141,6 @@ function runTests() {
     currentBalance("Shrey") === 270,
     "Test Case 11: Current balance for Shrey should be 270 (balance should not go below zero)"
   );
-
 }
 
 runTests();
