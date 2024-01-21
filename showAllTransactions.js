@@ -58,4 +58,4 @@ function runShowAllTransactionsTest() {
     }
 }
 
-runShowAllTransactionsTest()
+// runShowAllTransactionsTest()

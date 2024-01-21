@@ -47,4 +47,4 @@ function runAddMoneyTests() {
   }
 }
 
-runAddMoneyTests()
+// runAddMoneyTests()

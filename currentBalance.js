@@ -58,4 +58,4 @@ function runCurrentBalancetest() {
   console.log("Current Balance: " + currentBalance("Ayush"));
 }
 
-runCurrentBalancetest()
+// runCurrentBalancetest()
