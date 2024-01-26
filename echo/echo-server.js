@@ -3,26 +3,25 @@ const net = require('net');
 const server = net.createServer((socket) => {
   console.log('Client connected');
 
+  // Set encoding to utf-8 to handle string data
+  socket.setEncoding('utf-8');
+
+  // Event listener for data received from the client
   socket.on('data', (data) => {
-    const message = data.toString().trim();
-    console.log(`Received: ${message}`);
-    socket.write(`Echo Uppercase: ${message.toUpperCase()}`);
-    socket.write(`Echo Lowercase: ${message.toLowerCase()}`);
+    console.log(`Received from client: ${data}`);
+    
+    // Echo the received data back to the client
+    socket.write(`Server echoing: ${data}`);
   });
 
+  // Event listener for client disconnect
   socket.on('end', () => {
     console.log('Client disconnected');
   });
-
-  socket.on('error', (err) => {
-    console.error(`Socket error: ${err.message}`);
-  });
 });
 
+// Set the server to listen on port 3000
 const PORT = 3000;
 server.listen(PORT, () => {
-  console.log(`Echo server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
-
-// Export the server for testing purposes
-module.exports = server;

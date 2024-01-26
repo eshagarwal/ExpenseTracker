@@ -1,6 +1,6 @@
 const addMoney = require("./addMoney");
-const spendMoney = require("./spendMoney");
-const showAllTransactions = require("./showAllTransactions");
+const spendMoney = require("../spendMoney");
+const showAllTransactions = require("../showAllTransactions");
 const currentBalance = require("./currentBalance");
 
 // Refer this helper function for test assertions
