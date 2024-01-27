@@ -13,7 +13,7 @@ const client = net.createConnection({ port: 3000 }, () => {
 
 client.on('data', (data) => {
   console.log(`Server response: ${data}`);
-  startMenu()
+  startMenu();
 });
 
 client.on('end', () => {
@@ -26,11 +26,11 @@ client.on('error', (err) => {
   rl.close(); // Close readline interface on error
 });
 
+// Function to send a request to the server
 function sendRequest(operation, payload) {
   const message = JSON.stringify({ operation, payload });
   console.log(`Sending: ${message}`);
   client.write(message);
-  
 }
 
 function startMenu() {
@@ -47,10 +47,8 @@ function startMenu() {
         rl.question('Enter user name: ', (userName) => {
           rl.question('Enter amount: ', (amount) => {
             sendRequest('addMoney', { userName, amount: parseInt(amount) });
-            
           });
         });
-        
         break;
       case '2':
         rl.question('Enter user name: ', (userName) => {
@@ -85,3 +83,6 @@ rl.on('close', () => {
   console.log('Exiting...');
   client.end(); // Close the connection when readline interface is closed
 });
+
+// Exporting the sendRequest function for testing
+module.exports = { sendRequest };
