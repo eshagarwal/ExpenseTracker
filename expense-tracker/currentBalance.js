@@ -1,7 +1,7 @@
 const users = require("./users");
 
 // Function to get the current balance
-function currentBalance(userName) {
+function currentBalance(userName, callback) {
   const user = users.find((user) => user.name === userName);
 
   if (user) {
@@ -12,10 +12,9 @@ function currentBalance(userName) {
         : acc - transaction.amount;
     }, 0);
 
-    return balance;
+    callback(`Current balance for user '${userName}': ${balance}`);
   } else {
-    console.error(`User '${userName}' not found.`);
-    return null;
+    callback(`User '${userName}' not found.`);
   }
 }
 

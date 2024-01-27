@@ -1,14 +1,15 @@
 const users = require("./users");
 
 // Function to add money received
-function addMoney(userName, amount) {
+function addMoney(userName, amount, callback) {
   const user = users.find((user) => user.name === userName);
 
   if (user) {
     const date = new Date();
     user.transactions.push({ type: "Receive", date, amount });
+    callback(`Added money for user '${userName}'.`);
   } else {
-    console.error(`User '${userName}' not found.`);
+    callback(`User '${userName}' not found.`);
   }
 }
 

@@ -1,10 +1,15 @@
 const users = require("./users");
 
 // Function to show the list of all transactions
-function showAllTransactions(userName) {
+function showAllTransactions(userName, callback) {
   const user = users.find((user) => user.name === userName);
 
-  return user ? user.transactions : [];
+  if (user) {
+    const transactions = user.transactions;
+    callback(`All transactions for user '${userName}': ${JSON.stringify(transactions)}`);
+  } else {
+    callback(`User '${userName}' not found.`);
+  }
 }
 
 module.exports = showAllTransactions;

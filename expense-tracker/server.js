@@ -17,28 +17,38 @@ const server = net.createServer((socket) => {
 
     // Function to send a response to the client
     function sendResponse(response) {
-      socket.write(JSON.stringify({ response }));
+      if (!socket.destroyed) {
+        socket.write(JSON.stringify({ response }));
+      }
     }
 
     // Check the type of operation requested by the client
     switch (parsedMessage.operation) {
       case 'addMoney':
         const { userName, amount } = parsedMessage.payload;
-        addMoney(userName, amount);
-        sendResponse(`Added money for user '${userName}'.`);
+        addMoney(userName, amount, (result) => {
+          console.log(result);
+          sendResponse(result);
+        });
         break;
       case 'currentBalance':
-        const balance = currentBalance(parsedMessage.payload.userName);
-        sendResponse(`Current balance for user '${parsedMessage.payload.userName}': ${balance}`);
+        currentBalance(parsedMessage.payload.userName, (result) => {
+          console.log(result);
+          sendResponse(result);
+        });
         break;
       case 'spendMoney':
         const { spendUserName, spendAmount, spendPurpose } = parsedMessage.payload;
-        spendMoney(spendUserName, spendAmount, spendPurpose);
-        sendResponse(`Spent money for user '${spendUserName}'.`);
+        spendMoney(spendUserName, spendAmount, spendPurpose, (result) => {
+          console.log(result);
+          sendResponse(result);
+        });
         break;
       case 'showAllTransactions':
-        const allTransactions = showAllTransactions(parsedMessage.payload.userName);
-        sendResponse(`All transactions for user '${parsedMessage.payload.userName}': ${JSON.stringify(allTransactions)}`);
+        showAllTransactions(parsedMessage.payload.userName, (result) => {
+          console.log(result);
+          sendResponse(result);
+        });
         break;
       default:
         sendResponse('Invalid operation requested by the client.');

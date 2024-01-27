@@ -1,13 +1,33 @@
 const readline = require("readline");
-const addMoney = require("./addMoney");
-const spendMoney = require("./spendMoney");
-const showAllTransactions = require("./showAllTransactions");
-const currentBalance = require("./currentBalance");
-const users = require("./users");
+const net = require("net");
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
+});
+
+const client = net.createConnection({ host: 'localhost', port: 3000 }, () => {
+  console.log('Connected to server');
+  menu();
+});
+
+// Handle data received from the server
+client.on('data', (data) => {
+  const response = JSON.parse(data.toString().trim());
+  console.log(`Server response: ${response.response}`);
+  menu();
+});
+
+// Handle disconnection
+client.on('end', () => {
+  console.log('Disconnected from server');
+  rl.close();
+});
+
+// Handle errors
+client.on('error', (err) => {
+  console.error(`Socket error: ${err.message}`);
+  rl.close();
 });
 
 function menu() {
@@ -33,7 +53,7 @@ function menu() {
         checkBalanceOperation();
         break;
       case "e":
-        rl.close();
+        client.end(); // Disconnect from the server
         break;
       default:
         console.log("Invalid option. Please choose again.");
@@ -45,53 +65,47 @@ function menu() {
 
 function addMoneyOperation() {
   rl.question("Enter user name: ", (userName) => {
-    const user = users.find((user) => user.name === userName);
-    if (user) {
-      rl.question("Enter amount to add: ", (amount) => {
-        addMoney(userName, parseFloat(amount));
-        console.log(`Amount added successfully for ${userName}`);
-        menu();
-      });
-    } else {
-      console.error(`User '${userName}' not found.`);
-      menu();
-    }
+    rl.question("Enter amount to add: ", (amount) => {
+      const addMoneyData = {
+        operation: 'addMoney',
+        payload: { userName, amount: parseFloat(amount) },
+      };
+      client.write(JSON.stringify(addMoneyData));
+    });
   });
 }
 
 function spendMoneyOperation() {
   rl.question("Enter user name: ", (userName) => {
-    const user = users.find((user) => user.name === userName);
-    if (user) {
-      rl.question("Enter amount to spend: ", (amount) => {
-        rl.question("Enter purpose: ", (purpose) => {
-          spendMoney(userName, parseFloat(amount), purpose);
-          console.log(`Amount spent successfully for ${userName}`);
-          menu();
-        });
+    rl.question("Enter amount to spend: ", (amount) => {
+      rl.question("Enter purpose: ", (purpose) => {
+        const spendMoneyData = {
+          operation: 'spendMoney',
+          payload: { spendUserName: userName, spendAmount: parseFloat(amount), spendPurpose: purpose },
+        };
+        client.write(JSON.stringify(spendMoneyData));
       });
-    } else {
-      console.error(`User '${userName}' not found.`);
-      menu();
-    }
+    });
   });
 }
 
 function viewTransactionsOperation() {
   rl.question("Enter user name: ", (userName) => {
-    const transactions = showAllTransactions(userName);
-    console.log(`Transactions for ${userName}:`, transactions);
-    menu();
+    const showTransactionsData = {
+      operation: 'showAllTransactions',
+      payload: { userName },
+    };
+    client.write(JSON.stringify(showTransactionsData));
   });
 }
 
 function checkBalanceOperation() {
   rl.question("Enter user name: ", (userName) => {
-    const balance = currentBalance(userName);
-    if (balance !== null) {
-      console.log(`Current balance for ${userName}: ${balance}`);
-    }
-    menu();
+    const checkBalanceData = {
+      operation: 'currentBalance',
+      payload: { userName },
+    };
+    client.write(JSON.stringify(checkBalanceData));
   });
 }
 
