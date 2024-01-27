@@ -8,7 +8,7 @@ const rl = readline.createInterface({
 
 const client = net.createConnection({ host: 'localhost', port: 3000 }, () => {
   console.log('Connected to server');
-  menu();
+  
 });
 
 // Handle data received from the server
