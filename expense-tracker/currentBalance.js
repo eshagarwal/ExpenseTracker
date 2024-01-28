@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const users = require("./users");
 
 // Function to get the current balance
@@ -5,11 +7,15 @@ function currentBalance(userName) {
   const user = users.find((user) => user.name === userName);
 
   if (user) {
-    const transactions = user.transactions;
+    const transactionFiles = getTransactionFiles(userName);
+    const transactions = transactionFiles.map((file) => {
+      const filePath = path.join(__dirname, `../data/transactions/${file}`);
+      const transactionData = fs.readFileSync(filePath, "utf-8");
+      return JSON.parse(transactionData);
+    });
+
     const balance = transactions.reduce((acc, transaction) => {
-      return transaction.type === "Receive"
-        ? acc + transaction.amount
-        : acc - transaction.amount;
+      return transaction.type === "Receive" ? acc + transaction.amount : acc - transaction.amount;
     }, 0);
 
     return balance;
@@ -19,7 +25,15 @@ function currentBalance(userName) {
   }
 }
 
+function getTransactionFiles(userName) {
+  const transactionPath = path.join(__dirname, `../data/transactions`);
+  const files = fs.readdirSync(transactionPath);
+
+  return files.filter((file) => file.startsWith(`${userName}_`));
+}
+
 module.exports = currentBalance;
+
 
 // Test cases
 function runCurrentBalanceTests() {

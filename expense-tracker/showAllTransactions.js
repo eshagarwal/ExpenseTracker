@@ -1,13 +1,28 @@
+const fs = require("fs");
+const path = require("path");
 const users = require("./users");
 
 // Function to show the list of all transactions
 function showAllTransactions(userName) {
   const user = users.find((user) => user.name === userName);
+  const transactionFiles = getTransactionFiles(userName);
 
-  return user ? user.transactions : [];
+  return transactionFiles.map((file) => {
+    const filePath = path.join(__dirname, `../data/transactions/${file}`);
+    const transactionData = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(transactionData);
+  });
+}
+
+function getTransactionFiles(userName) {
+  const transactionPath = path.join(__dirname, `../data/transactions`);
+  const files = fs.readdirSync(transactionPath);
+
+  return files.filter((file) => file.startsWith(`${userName}_`));
 }
 
 module.exports = showAllTransactions;
+
 
 // Test cases
 function runShowAllTransactionsTests() {
