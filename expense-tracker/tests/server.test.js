@@ -2,7 +2,7 @@ const assert = require('assert');
 const net = require('net');
 
 // Mocking addMoney, currentBalance, spendMoney, showAllTransactions functions
-const { addMoney, currentBalance, spendMoney, showAllTransactions } = require('./server');
+const { addMoney, currentBalance, spendMoney, showAllTransactions } = require('../server');
 
 // Mocking server
 const mockServer = net.createServer((socket) => {

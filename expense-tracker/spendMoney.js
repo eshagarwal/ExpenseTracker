@@ -8,7 +8,7 @@ function spendMoney(userName, amount, purpose) {
 
   if (user) {
     const date = new Date();
-    const transaction = { type: "Spend", date, amount, purpose };
+    const transaction = { userName, type: "Spend", date, amount, purpose };
 
     // Save transaction to a file
     saveTransactionToFile(user.name, transaction);
@@ -21,7 +21,7 @@ function spendMoney(userName, amount, purpose) {
 
 function saveTransactionToFile(userName, transaction) {
   const transactionId = generateUniqueId();
-  const fileName = path.join(__dirname, `../data/transactions/${userName}_${transactionId}.json`);
+  const fileName = path.join(__dirname, `../data/transactions/${transactionId}.json`);
 
   fs.writeFileSync(fileName, JSON.stringify(transaction, null, 2));
 }

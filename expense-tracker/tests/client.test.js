@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { sendRequest, startMenu } = require('./menu-as-client');
+const { sendRequest, startMenu } = require('../menu-as-client');
 
 // Mocking readline and client
 const mockReadline = {

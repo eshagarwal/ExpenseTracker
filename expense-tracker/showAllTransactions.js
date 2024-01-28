@@ -5,7 +5,7 @@ const users = require("./users");
 // Function to show the list of all transactions
 function showAllTransactions(userName) {
   const user = users.find((user) => user.name === userName);
-  const transactionFiles = getTransactionFiles(userName);
+  const transactionFiles = getTransactionFiles();
 
   return transactionFiles.map((file) => {
     const filePath = path.join(__dirname, `../data/transactions/${file}`);
@@ -14,11 +14,11 @@ function showAllTransactions(userName) {
   });
 }
 
-function getTransactionFiles(userName) {
+function getTransactionFiles() {
   const transactionPath = path.join(__dirname, `../data/transactions`);
   const files = fs.readdirSync(transactionPath);
 
-  return files.filter((file) => file.startsWith(`${userName}_`));
+  return files;
 }
 
 module.exports = showAllTransactions;

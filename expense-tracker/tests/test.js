@@ -1,10 +1,10 @@
 const assert = require('assert');
 const net = require('net');
 
-const addMoney = require('./addMoney');
-const spendMoney = require('./spendMoney');
-const currentBalance = require('./currentBalance');
-const showAllTransactions = require('./showAllTransactions');
+const addMoney = require('../addMoney');
+const spendMoney = require('../spendMoney');
+const currentBalance = require('../currentBalance');
+const showAllTransactions = require('../showAllTransactions');
 
 // Create a simple mock server for testing
 const mockServer = net.createServer();
