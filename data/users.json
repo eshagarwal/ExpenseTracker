@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Shrey",
+    "transactions": [
+      {
+        "type": "Receive",
+        "date": "2024-01-28T07:27:03.035Z",
+        "amount": 20
+      }
+    ]
+  },
+  {
+    "name": "Ayush",
+    "transactions": []
+  },
+  {
+    "name": "Alfiya",
+    "transactions": []
+  },
+  {
+    "name": "Sam",
+    "transactions": []
+  }
+]
