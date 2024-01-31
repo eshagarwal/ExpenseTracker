@@ -2,27 +2,48 @@ const fs = require("fs");
 const path = require("path");
 const users = require("./users");
 
-// Function to show the list of all transactions
+// Function to show all transactions for a specific user without date range filtering
 function showAllTransactions(userName) {
   const user = users.find((user) => user.name === userName);
-  const transactionFiles = getTransactionFiles();
 
-  return transactionFiles.map((file) => {
-    const filePath = path.join(__dirname, `../data/transactions/${file}`);
-    const transactionData = fs.readFileSync(filePath, "utf-8");
-    return JSON.parse(transactionData);
-  });
+  if (!user) {
+    console.error(`User '${userName}' not found.`);
+    return [];
+  }
+
+  const transactionFiles = getTransactionFiles(userName);
+
+  return transactionFiles
+    .map((file) => {
+      const filePath = path.join(__dirname, `../data/transactions/${file}`);
+      const transactionData = fs.readFileSync(filePath, "utf-8");
+      return JSON.parse(transactionData);
+    });
 }
 
-function getTransactionFiles() {
+function getTransactionFiles(userName) {
   const transactionPath = path.join(__dirname, `../data/transactions`);
-  const files = fs.readdirSync(transactionPath);
+  try {
+    const files = fs.readdirSync(transactionPath);
+    // console.log("Transaction Files:", files);
 
-  return files;
+    return files.filter((file) => {
+      const filePath = path.join(transactionPath, file);
+      const transactionData = fs.readFileSync(filePath, "utf-8");
+      const parsedTransaction = JSON.parse(transactionData);
+
+      return parsedTransaction.userName === userName;
+    });
+  } catch (error) {
+    console.error("Error reading transaction files:", error);
+    return [];
+  }
 }
 
 module.exports = showAllTransactions;
 
+// const transactionsForAyush = showAllTransactions("Ayush");
+// console.log(transactionsForAyush);
 
 // Test cases
 function runShowAllTransactionsTests() {

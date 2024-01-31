@@ -38,7 +38,6 @@ function getTransactionFiles(userName) {
       const transactionData = fs.readFileSync(filePath, "utf-8");
       const parsedTransaction = JSON.parse(transactionData);
       
-      // Assuming your user name is stored in the 'userName' property within the file
       return parsedTransaction.userName === userName;
     });
   } catch (error) {
