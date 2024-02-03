@@ -57,4 +57,32 @@ const server = net.createServer((socket) => {
 const PORT = 3000;
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
+
+  // Test case: Check if the port is up
+  const checkPortClient = new net.Socket();
+  checkPortClient.setTimeout(1000); // Set a timeout for the connection attempt
+
+  checkPortClient.on('connect', () => {
+    console.log('Port is up');
+    checkPortClient.end();
+  });
+
+  checkPortClient.on('error', (err) => {
+    console.error(`Error connecting to port: ${err.message}`);
+    assert.fail('Port should be up, but got an error');
+  });
+
+  checkPortClient.on('timeout', () => {
+    console.error('Connection timeout');
+    assert.fail('Port should be up, but connection timed out');
+  });
+
+  checkPortClient.connect(PORT, 'localhost');
 });
+
+// Close the server after the check
+// setTimeout(() => {
+//   server.close();
+// }, 2000);
+
+
