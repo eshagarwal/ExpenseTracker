@@ -6,33 +6,43 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-const client = net.createConnection({ port: 3000 }, () => {
-  console.log('Connected to server');
-  startMenu();
-});
+let currentServer;
 
-client.on('data', (data) => {
-  console.log(`Server response: ${data}`);
-  startMenu();
-});
+// Function to create a client connection
+function createClient(port, onConnect, onData, onEnd, onError) {
+  const client = net.createConnection({ port }, () => {
+    console.log(`Connected to server on port ${port}`);
+    // onConnect();
+    startMenu();
+  });
 
-client.on('end', () => {
-  console.log('Connection closed by the server');
-  rl.close();
-});
+  client.on('data', (data) => {
+    console.log(`Server response on port ${port}: ${data}`);
+    onData(data);
+  });
 
-client.on('error', (err) => {
-  console.error(`Client error: ${err.message}`);
-  rl.close(); // Close readline interface on error
-});
+  client.on('end', () => {
+    console.log(`Connection closed by the server on port ${port}`);
+    // onEnd();
+    startMenu();
+  });
+
+  client.on('error', (err) => {
+    console.error(`Client error on port ${port}: ${err.message}`);
+    onError(err);
+  });
+
+  return client;
+}
 
 // Function to send a request to the server
 function sendRequest(operation, payload) {
   const message = JSON.stringify({ operation, payload });
-  console.log(`Sending: ${message}`);
-  client.write(message);
+  console.log(`Sending on port ${currentServer.remotePort}: ${message}`);
+  currentServer.write(message);
 }
 
+// Function to start the menu
 function startMenu() {
   console.log('\nMenu:');
   console.log('1. Add Money');
@@ -84,29 +94,34 @@ rl.on('close', () => {
   client.end(); // Close the connection when readline interface is closed
 });
 
+// Create a client connection to server 1
+currentServer = createClient(3000, switchServer, handleData, handleEnd, handleError);
+
 // Exporting the sendRequest function for testing
 module.exports = { sendRequest };
 
+function switchServer() {
+  // Switch to the other server
+  currentServer.end(); // Close the current connection
 
-const PORT = 3000;
+  // Create a new client connection to server 2
+  currentServer = createClient(8000, switchServer, handleData, handleEnd, handleError);
+}
 
-// Test case: Check if the port is up
-const checkPortClient = new net.Socket();
-checkPortClient.setTimeout(1000); // Set a timeout for the connection attempt
+function handleData(data) {
+  // Handle data received from the server
+  // ...
+}
 
-checkPortClient.on('connect', () => {
-  console.log('Port is up');
-  checkPortClient.end();
-});
+function handleEnd() {
+  // Handle the end event (connection closed by the server)
+  // ...
+}
 
-checkPortClient.on('error', (err) => {
-  console.error(`Error connecting to port: ${err.message}`);
-  assert.fail('Port should be up, but got an error');
-});
+function handleError(err) {
+  // Handle errors from the server
+  // ...
+}
 
-checkPortClient.on('timeout', () => {
-  console.error('Connection timeout');
-  assert.fail('Port should be up, but connection timed out');
-});
-
-checkPortClient.connect(PORT, 'localhost');
+// Start the initial connection
+startMenu();
