@@ -1,11 +1,11 @@
-const assert = require('assert');
-const net = require('net');
+// const assert = require('assert');
+import { createConnection } from 'net';
 
 const PORT = 3000;
 
 // Function to check if the server is running
 function checkServerRunning(callback) {
-  const client = net.createConnection({ port: PORT }, () => {
+  const client = createConnection({ port: PORT }, () => {
     client.end();
     callback(true);
   });
@@ -21,7 +21,7 @@ function checkServerRunning(callback) {
 
 // Function to check if the server responds with the message in uppercase or lowercase
 function checkServerResponse(callback) {
-  const client = net.createConnection({ port: PORT }, () => {
+  const client = createConnection({ port: PORT }, () => {
     // Send a message to the server
     client.write('HELLO');
   });
